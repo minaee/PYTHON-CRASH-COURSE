@@ -1,10 +1,15 @@
 <!doctype html>
 <html lang="en">
+{% load static %}
+
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Learning Log</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}" >
+
+
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
