@@ -32,6 +32,9 @@ aria-expanded="false" aria-label="Toggle navigation">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'learning_logs:topics' %}">
                             Topics</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'finance:index' %}">
+                            Finance</a></li>
                 </ul> <!-- End of links on left side of navbar -->
 
                 <!-- Account-related links -->
@@ -59,13 +62,25 @@ aria-expanded="false" aria-label="Toggle navigation">
         </div> <!-- Closes navbar's container -->
     </nav> <!-- End of navbar -->
 
-    <main class="container">
-        <div class="pb-2 mb-2 border-bottom">
-            {% block page_header %}{% endblock page_header %}
+    <main class="container-fluid">
+
+        <div class="row justify-content-center">
+            <div class="col-md">
+            </div>
+
+            <div class="col-md-10">
+                <div class="pb-2 mb-2 border-bottom">
+                    {% block page_header %}{% endblock page_header %}
+                </div>
+                <div>
+                    {% block content %}{% endblock content %}
+                </div>
+            </div>
+
+            <div class="col-md">
+            </div>
         </div>
-        <div>
-            {% block content %}{% endblock content %}
-        </div>
+        
     </main>
 
 </body>

@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-tp@t!u^h-95#!#!(t!-s5&u+70=isidk2!s6^3o9f552w3vk76')
+SECRET_KEY = config('SECRET_KEY') # , default='django-insecure-tp@t!u^h-95#!#!(t!-s5&u+70=isidk2!s6^3o9f552w3vk76'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =  config('DEBUG', default=False, cast=bool)
+DEBUG =  True #config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+ALLOWED_HOSTS = ['localhost', '127.0.0.1'] #config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 
 
 
@@ -35,9 +35,11 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv(
 INSTALLED_APPS = [
     'learning_logs',
     'accounts',
+    'finance',
     
     # Third-party apps
     'django_bootstrap5',
+
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -90,7 +92,6 @@ DATABASES = {
         'PORT': config('DATABASE_PORT', default='5432'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
