@@ -145,3 +145,22 @@ def add_transaction(request):
     # Display a blank or invalid form.
     context = {'form': form, 'transaction_types': qs_transaction_types,}
     return render(request, 'finance/add_transaction.html', context)
+
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+import json
+from pathlib import Path
+
+@login_required
+def transactions_api(request):
+    transactions = Transaction.objects.filter(user=request.user).values(
+        'date', 'amount', 'category', 'description', 'type'
+    )
+    return JsonResponse(list(transactions), safe=False)
+
+def get_vite_asset(filename):
+    manifest_path = Path('staticfiles/frontend/.vite/manifest.json')
+    with open(manifest_path) as f:
+        manifest = json.load(f)
+    return manifest[filename]['file']

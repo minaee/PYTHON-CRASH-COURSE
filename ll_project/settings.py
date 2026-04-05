@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY') # , default='django-insecure-tp@t!u^h-95#!#!(t!-s5&u+70=isidk2!s6^3o9f552w3vk76'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =  True #config('DEBUG', default=False, cast=bool)
+DEBUG =  config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1'] #config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'], cast=Csv())
 
 
 
@@ -136,8 +136,6 @@ LOGIN_URL = 'accounts:login'
 
 
 # Static files configuration for production
-STATIC_ROOT = '/home/minaee/PYTHON-CRASH-COURSE/staticfiles'
-
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
