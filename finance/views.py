@@ -164,3 +164,51 @@ def get_vite_asset(filename):
     with open(manifest_path) as f:
         manifest = json.load(f)
     return manifest[filename]['file']
+
+from django.views.decorators.http import require_http_methods
+
+@login_required
+@require_http_methods(["POST"])
+def add_transaction_api(request):
+    data = json.loads(request.body)
+    transaction = Transaction.objects.create(
+        user=request.user,
+        date=data['date'],
+        amount=data['amount'],
+        category=data['category'],
+        description=data.get('description', ''),
+        type=data['type'],
+    )
+
+    return JsonResponse({'status': 'ok', 'id': transaction.id})
+
+from django.db.models import Sum
+from collections import defaultdict
+
+@login_required
+def finance_summary_api(request):
+    transactions = Transaction.objects.filter(user=request.user)
+
+    total_income = transactions.filter(type='income').aggregate(total=Sum('amount'))['total'] or 0
+    total_expenses = transactions.filter(type='expense').aggregate(total=Sum('amount'))['total'] or 0
+
+    by_category = transactions.filter(type='expense').values('category').annotate(total=Sum('amount')).order_by('-total')
+
+    # Monthly totals
+    monthly = defaultdict(lambda: {'income': 0, 'expense': 0})
+    for t in transactions.values('date', 'amount', 'type'):
+        month = t['date'].strftime('%Y-%m')
+        monthly[month][t['type']] += float(t['amount'])
+
+    monthly_data = [
+        {'month': k, 'income': v['income'], 'expense': v['expense']}
+        for k, v in sorted(monthly.items())
+    ]
+
+    return JsonResponse({
+        'total_income': float(total_income),
+        'total_expenses': float(total_expenses),
+        'net': float(total_income) - float(total_expenses),
+        'by_category': list(by_category),
+        'monthly': monthly_data,
+    })
