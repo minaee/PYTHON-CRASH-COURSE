@@ -17,6 +17,7 @@ def index(request):
 
     return render(request, 'finance/index.html')
 
+@login_required
 def transactions(request):
     transactions = Transaction.objects.filter(user=request.user).values('date', 'amount', 'category', 'description', 'type')
 
@@ -36,6 +37,7 @@ def transactions(request):
     context = {'transactions': transactions, 'plot': plot_div}
     return render(request, 'finance/transactions.html', context)
 
+@login_required
 def add_transaction(request):
 
     if request.method != 'POST':
