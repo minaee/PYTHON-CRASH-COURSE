@@ -1,11 +1,13 @@
-# 🚀 Project Name
+# Personal Finance & Learning Log
 
-> A Django project, built as a result of following the "Python Crash Course" book by Eric Matthes. 
+> A full-stack web application built with Django and React — deployed on a Linux server.
 
 [![Python](https://img.shields.io/badge/Python-3.14+-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
 [![Django](https://img.shields.io/badge/Django-6.x-092E20?style=flat&logo=django&logoColor=white)](https://djangoproject.com)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-passing-brightgreen?style=flat)]()
+
+🌐 **Live Demo:** [http://minaee.duckdns.org](http://minaee.duckdns.org)
 
 ---
 
@@ -14,51 +16,70 @@
 - [About](#about)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Environment Variables](#environment-variables)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Running Tests](#running-tests)
-- [Deployment](#deployment)
+- [Environment Variables](#environment-variables)
 - [API Reference](#api-reference)
-- [Contributing](#contributing)
+- [Project Structure](#project-structure)
 - [License](#license)
 
 ---
 
 ## About
 
-A Django project, built as a result of following the "Python Crash Course" book by Eric Matthes. This project serves as a practical example of how to structure a Django application, implement common features, and follow best practices. 
-
-It includes user authentication, CRUD operations, file uploads, and more. The project is designed to be easily extendable and serves as a solid foundation for building more complex applications.
+A full-stack web app with two modules: a **Learning Log** for journaling topics and entries, and a **Finance Tracker** for managing personal income and expenses with interactive charts. Built initially from the *Python Crash Course* book by Eric Matthes, then significantly extended with a REST API layer and a React frontend.
 
 ---
 
 ## ✨ Features
 
-- ✅ User authentication (registration, login, logout)
-- ✅ CRUD operations for a sample model (e.g., blog posts, transactions)
-- ✅ 
-- 🚧 File upload functionality (in progress)
+### Learning Log
+- ✅ Create and manage learning topics
+- ✅ Add and edit journal entries per topic
+- ✅ All data is private — each user only sees their own topics
+
+### Finance Tracker
+- ✅ Add income and expense transactions
+- ✅ Interactive pie chart — spending breakdown by category
+- ✅ Bar chart — monthly income vs expenses
+- ✅ Summary dashboard — total income, total expenses, net balance
+- ✅ Real-time UI updates without page reloads (React)
+
+### General
+- ✅ User registration, login, and logout
+- ✅ Fully deployed on a Linux server (Gunicorn + Nginx)
 
 ---
 
 ## 🛠 Tech Stack
 
-| Layer      | Technology          |
-|------------|---------------------|
-| Backend    | Django 6.x          |
-| Database   | PostgreSQL          |
-| Frontend   | HTML /  CSS         |
-| Auth       | django-allauth      |
-| Deployment |  Gunicorn           |
+| Layer         | Technology                        |
+|---------------|-----------------------------------|
+| Backend       | Django 6, Python 3.14             |
+| Database      | PostgreSQL                        |
+| Frontend      | React 19, Recharts, Bootstrap 5   |
+| Build Tool    | Vite 8                            |
+| Auth          | Django built-in auth              |
+| Deployment    | Gunicorn, Nginx, DuckDNS          |
 
-<!-- | Cache      | Redis               | -->
-<!-- | Task Queue | Celery              | -->
-<!-- | Storage    | AWS S3 / Cloudinary | -->
+---
 
+## 🏗 Architecture
+
+This project uses a **Django + React islands** architecture:
+
+- Django handles routing, authentication, database access, and server-rendered templates
+- React is embedded as an interactive island inside the Finance page
+- The React component communicates with Django via a JSON REST API
+- Vite compiles the React code into static assets, served by Django's static file pipeline
+
+```
+Browser
+  ├── Django templates (Learning Log, Auth pages)
+  └── React island (Finance dashboard)
+        └── fetches from Django JSON API
+              └── PostgreSQL
+```
 
 ---
 
@@ -67,10 +88,8 @@ It includes user authentication, CRUD operations, file uploads, and more. The pr
 ### Prerequisites
 
 - Python 3.14+
-- PostgreSQL 18+
-- Git
-<!-- - Redis (optional, for caching/Celery) -->
-
+- Node.js 18+
+- PostgreSQL
 
 ### Installation
 
@@ -87,7 +106,7 @@ It includes user authentication, CRUD operations, file uploads, and more. The pr
    venv\Scripts\activate           # Windows
    ```
 
-3. **Install dependencies**
+3. **Install Python dependencies**
    ```bash
    pip install -r requirements.txt
    ```
@@ -103,12 +122,21 @@ It includes user authentication, CRUD operations, file uploads, and more. The pr
    python manage.py migrate
    ```
 
-6. **Create a superuser**
+6. **Build the React frontend**
+   ```bash
+   cd frontend
+   npm install
+   npm run build
+   cd ..
+   python manage.py collectstatic
+   ```
+
+7. **Create a superuser**
    ```bash
    python manage.py createsuperuser
    ```
 
-7. **Run the development server**
+8. **Run the development server**
    ```bash
    python manage.py runserver
    ```
@@ -117,7 +145,7 @@ It includes user authentication, CRUD operations, file uploads, and more. The pr
 
 ---
 
-### Environment Variables
+## 🔐 Environment Variables
 
 Copy `.env.example` to `.env` and fill in the values:
 
@@ -128,110 +156,93 @@ DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 
 # Database
-DATABASE_URL=postgres://user:password@localhost:5432/dbname
-
-# Redis (optional)
-REDIS_URL=redis://localhost:6379/0
-
-# Email
-EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
-EMAIL_HOST=smtp.example.com
-EMAIL_PORT=587
-EMAIL_HOST_USER=you@example.com
-EMAIL_HOST_PASSWORD=your-email-password
-
-
+DATABASE_NAME=ll_project_db
+DATABASE_USER=your_db_user
+DATABASE_PASSWORD=your_db_password
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
 ```
-<!-- # AWS S3 (optional)
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_STORAGE_BUCKET_NAME= -->
-
-
-<!-- ## 📁 Project Structure
-
-```
-your-repo/
-├── config/                 # Project settings & URL routing
-│   ├── settings/
-│   │   ├── base.py
-│   │   ├── development.py
-│   │   └── production.py
-│   ├── urls.py
-│   └── wsgi.py
-├── apps/
-│   ├── accounts/           # User auth & profiles
-│   ├── core/               # Shared utilities, base models
-│   └── your_app/           # Main application logic
-├── static/                 # CSS, JS, images
-├── templates/              # HTML templates
-├── media/                  # User-uploaded files (local dev)
-├── requirements/
-│   ├── base.txt
-│   ├── development.txt
-│   └── production.txt
-├── .env.example
-├── manage.py
-└── README.md
-``` -->
-
-<!-- ## 🧪 Running Tests
-
-```bash
-# Run all tests
-python manage.py test
-
-# Run tests for a specific app
-python manage.py test apps.your_app
-
-# With coverage report
-pip install coverage
-coverage run manage.py test
-coverage report
-coverage html                 # Generates htmlcov/index.html
-``` -->
-
----
-
-## 🚢 Deployment
-
-<!-- ### Docker
-
-```bash
-docker compose up --build
-```
-
-### Manual (Production)
-
-```bash
-# Collect static files
-python manage.py collectstatic --noinput
-
-# Run with Gunicorn
-gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3
-```
-
-See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed production setup instructions.
 
 ---
 
 ## 📡 API Reference
 
-If your project exposes a REST or GraphQL API, document it here or link to external docs.
+All endpoints require authentication (session-based).
+
+| Method | Endpoint                        | Description                        |
+|--------|---------------------------------|------------------------------------|
+| GET    | `/finance/api/transactions/`    | List all transactions for the user |
+| POST   | `/finance/api/transactions/add/`| Create a new transaction           |
+| GET    | `/finance/api/summary/`         | Get totals, chart data, and net balance |
+
+### Example — GET `/finance/api/transactions/`
+
+```json
+[
+  {
+    "date": "2025-04-01",
+    "amount": "50.00",
+    "category": "Groceries",
+    "description": "Weekly shop",
+    "type": "expense"
+  }
+]
+```
+
+### Example — POST `/finance/api/transactions/add/`
+
+```json
+{
+  "date": "2025-04-01",
+  "amount": "50.00",
+  "category": "Groceries",
+  "description": "Weekly shop",
+  "type": "expense"
+}
+```
+
+### Example — GET `/finance/api/summary/`
+
+```json
+{
+  "total_income": 3000.00,
+  "total_expenses": 1250.00,
+  "net": 1750.00,
+  "by_category": [
+    { "category": "Groceries", "total": "300.00" }
+  ],
+  "monthly": [
+    { "month": "2025-04", "income": 3000.00, "expense": 1250.00 }
+  ]
+}
+```
+
+---
+
+## 📁 Project Structure
 
 ```
-GET  /api/v1/resource/          List all resources
-POST /api/v1/resource/          Create a new resource
-GET  /api/v1/resource/{id}/     Retrieve a resource
-PUT  /api/v1/resource/{id}/     Update a resource
-DEL  /api/v1/resource/{id}/     Delete a resource
+PYTHON-CRASH-COURSE/
+├── accounts/               # User registration & auth
+├── finance/                # Finance tracker app
+│   ├── models.py           # Transaction model
+│   ├── views.py            # Template views + JSON API views
+│   └── urls.py
+├── frontend/               # React frontend (Vite)
+│   ├── src/
+│   │   ├── main.jsx        # React entry point
+│   │   └── TransactionsApp.jsx  # Main React component
+│   └── vite.config.js
+├── learning_logs/          # Learning log app
+├── ll_project/             # Django project settings
+├── static/                 # Source static files
+├── staticfiles/            # Compiled static files (collectstatic output)
+├── templates/              # Django HTML templates
+├── requirements.txt
+└── manage.py
 ```
 
-Full API docs available at `/api/schema/swagger-ui/` when running locally.
-
---- -->
-
-
+---
 
 ## 📄 License
 
@@ -241,8 +252,7 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 ## 🙏 Acknowledgements
 
-- [Django](https://www.djangoproject.com/) — the web framework for perfectionists with deadlines
-- Any libraries, tutorials, or people worth crediting
-
----
-
+- [Python Crash Course](https://nostarch.com/python-crash-course) by Eric Matthes — the starting point for this project
+- [Django](https://www.djangoproject.com/)
+- [React](https://react.dev/)
+- [Recharts](https://recharts.org/)
